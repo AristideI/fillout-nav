@@ -20,6 +20,8 @@ import {
 import type { INavElement } from "./types";
 import { DEFAULT_NAV_TABS } from "./constants/defualtNavElements";
 import SortableNavElement from "./components/NavElement";
+import Button from "./components/button";
+import { Plus } from "lucide-react";
 
 // Sortable Nav Element Component
 
@@ -27,7 +29,7 @@ function App() {
   const [navElements, setNavElements] =
     useState<INavElement[]>(DEFAULT_NAV_TABS);
   const [activeNavElement, setActiveNavElement] = useState<INavElement>(
-    DEFAULT_NAV_TABS[0]
+    DEFAULT_NAV_TABS[3]
   );
 
   useEffect(() => {
@@ -91,6 +93,22 @@ function App() {
     }
   }
 
+  function handleAddPage() {
+    setNavElements((prev) => [
+      ...prev,
+      {
+        id: "new",
+        title: "New page",
+        Icon: Plus,
+        color: "#000000",
+        position: navElements.length + 1,
+        isActive: false,
+      },
+    ]);
+  }
+
+  function handleMouseEnter(navElement: INavElement) {}
+
   return (
     <DndContext
       sensors={sensors}
@@ -101,12 +119,12 @@ function App() {
         className="h-screen transition-colors duration-300 p-20 flex flex-col gap-4"
         style={parentStyles}
       >
-        <h1 className="text-2xl font-bold mb-8 p-20">Fillout</h1>
+        <h1 className="text-2xl font-bold mb-8">Fillout</h1>
         <SortableContext
           items={navElements.map((item) => item.id)}
           strategy={horizontalListSortingStrategy}
         >
-          <div className="flex flex-row gap-4 p-4 rounded-xl transition-all duration-500 ease-out">
+          <div className="flex flex-row gap-5 rounded-xl w-fit max-w-full overflow-x-auto transition-all duration-500 ease-out items-center relative">
             {navElements.map((navElement) => (
               <SortableNavElement
                 key={navElement.id}
@@ -114,6 +132,8 @@ function App() {
                 onClick={handleNavElementClick}
               />
             ))}
+            <Button text="Add page" onClick={handleAddPage} Icon={Plus} />
+            <div className="absolute right-0 top-1/2 w-full border border-primary-200 border-dashed z-0" />
           </div>
         </SortableContext>
       </article>

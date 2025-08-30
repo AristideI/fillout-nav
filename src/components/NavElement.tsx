@@ -8,6 +8,7 @@ type NavElementProps = {
 };
 
 export default function NavElement({ navElement, onClick }: NavElementProps) {
+  const { id, title, Icon, isActive } = navElement;
   const {
     attributes,
     listeners,
@@ -15,12 +16,16 @@ export default function NavElement({ navElement, onClick }: NavElementProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: navElement.id });
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const activeStyles =
+    "bg-white text-black border border-primary-100 shadow-lg";
+  const inactiveStyles =
+    "bg-primary-600 hover:bg-primary-700 text-primary-400";
 
   return (
     <div
@@ -28,21 +33,25 @@ export default function NavElement({ navElement, onClick }: NavElementProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`transition-all duration-300 ease-out  ${
-        navElement.isActive
-          ? "bg-white/80 text-gray-800 shadow-lg animate-glow"
-          : "bg-white/60 text-gray-700 hover:bg-white/70"
-      } ${isDragging ? "dragging" : ""}`}
+      className={`transition-all duration-300 ease-out rounded-lg z-10 ${
+        isDragging ? "dragging" : ""
+      } ${isActive ? activeStyles : inactiveStyles}`}
     >
       <button
-        className="flex flex-row gap-2 px-4 py-2 rounded-lg cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
           onClick(navElement);
         }}
+        className="flex flex-row gap-1.5 px-2.5 py-2 cursor-pointer text-sm font-medium z-10"
       >
-        <span className="relative z-10">{navElement.title}</span>
-        <span className="relative z-10">{navElement.position}</span>
+        {
+          <Icon
+            height={20}
+            width={20}
+            color={isActive ? "#F59D0E" : "#8c93a1"}
+          />
+        }
+        {title}
       </button>
 
       {isDragging && (
